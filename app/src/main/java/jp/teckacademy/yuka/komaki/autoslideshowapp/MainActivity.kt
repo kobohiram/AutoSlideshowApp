@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import jp.teckacademy.yuka.komaki.autoslideshowapp.databinding.ActivityMainBinding
 import java.sql.Time
 import java.util.*
@@ -17,24 +18,33 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityMainBinding
 
-    private var timer:Timer? =null
-    private var seconds=0.0
-    private var handler = Handler(Looper.getMainLooper())
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+
+            } else {
+
+            }
+        }
 
     private val PERMISSIONS_REQUEST_CODE =100
     private val readImagesPermission =
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)android.Manifest.permission.READ_MEDIA_IMAGES
         else android.Manifest.permission.READ_EXTERNAL_STORAGE
-
+    private var timer:Timer? =null
+    private var seconds=0.0
+    private var handler = Handler(Looper.getMainLooper())
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        binding.textView.text="許可されました"
 
         if (checkSelfPermission(readImagesPermission) == PackageManager.PERMISSION_GRANTED) {
             getContentsInfo()
         } else {
+            binding.textView.text="許可しないと表示できません"
             requestPermissions(
                 arrayOf(readImagesPermission),
                 PERMISSIONS_REQUEST_CODE
