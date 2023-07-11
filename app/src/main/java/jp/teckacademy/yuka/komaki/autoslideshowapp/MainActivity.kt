@@ -17,13 +17,12 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityMainBinding
-
     private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-
-            } else {
-
+        registerForActivityResult(ActivityResultContracts.RequestPermission()){isGranted->
+            if(isGranted){
+                Log.d("ANDROID","許可された")
+            }else{
+                Log.d("ANDROID","許可されなかった")
             }
         }
 
@@ -39,17 +38,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        binding.textView.text="許可されました"
 
         if (checkSelfPermission(readImagesPermission) == PackageManager.PERMISSION_GRANTED) {
             getContentsInfo()
         } else {
             binding.textView.text="許可しないと表示できません"
-            requestPermissions(
-                arrayOf(readImagesPermission),
-                PERMISSIONS_REQUEST_CODE
-            )
+            requestPermissionLauncher.launch(readImagesPermission)
         }
+
 
         val resolver = contentResolver
         val cursor = resolver.query(
