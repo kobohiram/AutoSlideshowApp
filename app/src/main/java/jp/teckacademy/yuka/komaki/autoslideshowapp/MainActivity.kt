@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private var handler = Handler(Looper.getMainLooper())
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -45,7 +46,6 @@ class MainActivity : AppCompatActivity() {
                 PERMISSIONS_REQUEST_CODE
             )
         }
-
         val resolver = contentResolver
         val cursor = resolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -54,6 +54,8 @@ class MainActivity : AppCompatActivity() {
             null,
             null
         )
+
+
         if(cursor!!.moveToFirst()){
             val fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
             val id = cursor.getLong(fieldIndex)
@@ -283,7 +285,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-                else{binding.message.text="許可されなかったので表示できません"        }
+
         }
     }
     private fun getContentsInfo() {
