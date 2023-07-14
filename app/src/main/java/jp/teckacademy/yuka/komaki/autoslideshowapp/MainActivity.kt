@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     }
-                }, 2000, 3000)
+                }, 0, 2000)
             } else {
                 timer!!.cancel()
                 timer = null
@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            PERMISSIONS_REQUEST_CODE ->
+            PERMISSIONS_REQUEST_CODE -> {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     val resolver = contentResolver
                     val cursor = resolver.query(
@@ -179,11 +179,14 @@ class MainActivity : AppCompatActivity() {
                         null,
                         null
                     )
-                    if(cursor!!.moveToFirst()){
+                    if (cursor!!.moveToFirst()) {
                         val fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
                         val id = cursor.getLong(fieldIndex)
                         val imageUri =
-                            ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                            ContentUris.withAppendedId(
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                id
+                            )
                         binding.imageView.setImageURI(imageUri)
                     }
 
@@ -273,7 +276,7 @@ class MainActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
-                            }, 2000, 3000)
+                            }, 0, 2000)
                         } else {
                             timer!!.cancel()
                             timer = null
@@ -285,8 +288,16 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
+                else  {
+                    binding.forwardButton.isClickable = false
+                    binding.backButton.isClickable = false
+                    binding.gostopButton.isClickable = false
+                    binding.message.text="許可されませんでした"
+                }
+            }
 
         }
+
     }
     private fun getContentsInfo() {
         val resolver = contentResolver
